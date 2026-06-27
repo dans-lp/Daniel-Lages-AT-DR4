@@ -30,7 +30,7 @@ function Etapa1() {
       <div>
          <article class="card">
             <ConteudoE1 pergunta={p} resposta={isVisible ? res : ''} />
-            <div  >
+            <div className={styles.footerBtns} >
                <button data-variant="secondary" onClick={() => setIsVisible(true)}>
                   Revelar resposta por inline event
                </button>
