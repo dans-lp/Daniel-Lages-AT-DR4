@@ -1,3 +1,4 @@
+import { CPagination, CPaginationItem } from '@coreui/react';
 import { Link } from 'react-router';
 
 function Header() {
@@ -5,13 +6,12 @@ function Header() {
    return (
       <div style={{ marginBottom: "50px" }}>
          <h1>Daniel Lages - AT - DR4</h1>
-         <nav aria-label="Pagination">
-            <menu class="buttons">
-               <li><a class="button outline small"><Link to="/etapa1">Etapa 1</Link></a></li>
-               <li><a class="button outline small"><Link to="/etapa2">Etapa 2</Link></a></li>
-               <li><a class="button outline small"><Link to="/">Etapa 3</Link></a></li>
-            </menu>
-         </nav >
+         <CPagination align='center'>
+            <CPaginationItem><Link to="/etapa1" style={{ textDecoration: 'none' }} >Etapa 1 </Link></CPaginationItem>
+            <CPaginationItem><Link to="/etapa2" style={{ textDecoration: 'none' }} >Etapa 2</Link></CPaginationItem>
+            <CPaginationItem><Link to="/" style={{ textDecoration: 'none' }}>Etapa 3</Link></CPaginationItem>
+            <CPaginationItem><Link to="/" style={{ textDecoration: 'none' }}>Etapa 4</Link></CPaginationItem>
+         </CPagination>
       </div>
    );
 }

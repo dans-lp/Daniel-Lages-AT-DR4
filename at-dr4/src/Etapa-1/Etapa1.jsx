@@ -1,7 +1,8 @@
 import styles from './Etapa1.module.css'
-import '@knadh/oat/oat.min.css';
-import '@knadh/oat/oat.min.js';
+//import '@knadh/oat/oat.min.css';
+//import '@knadh/oat/oat.min.js';
 import { useState } from 'react';
+import { CButton, CCard } from '@coreui/react'
 
 function ConteudoE1({ pergunta, resposta }) {
 
@@ -28,17 +29,17 @@ function Etapa1() {
 
    return (
       <div>
-         <article class="card">
+         <CCard className='card'>
             <ConteudoE1 pergunta={p} resposta={isVisible ? res : ''} />
             <div className={styles.footerBtns} >
-               <button data-variant="secondary" onClick={() => setIsVisible(true)}>
+               <CButton color="primary" className='rounded-0' variant='outline' onClick={() => setIsVisible(true)}>
                   Revelar resposta por inline event
-               </button>
-               <button data-variant="secondary" onClick={showRes} > Revelar resposta por função</button>
-               <button onClick={() => setIsVisible(false)}>Esconder</button>
+               </CButton>
+               <CButton color="primary" className='rounded-0' variant='outline' onClick={showRes} > Revelar resposta por função</CButton>
+               <CButton color="secondary" className='rounded-0' onClick={() => setIsVisible(false)}>Esconder</CButton>
 
             </div>
-         </article >
+         </CCard >
       </div >
    );
 }

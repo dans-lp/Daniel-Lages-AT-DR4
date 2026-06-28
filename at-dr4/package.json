@@ -10,7 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@knadh/oat": "^0.6.2",
+    "@coreui/coreui": "^5.8.0",
+    "@coreui/react": "^5.12.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "react-router": "^8.0.1"
