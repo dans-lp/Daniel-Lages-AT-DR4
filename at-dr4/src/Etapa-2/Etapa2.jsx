@@ -2,16 +2,15 @@
 import { useState } from 'react';
 import '@coreui/coreui/dist/css/coreui.min.css'
 import { CCard, CDropdown, CDropdownItemPlain, CDropdownMenu, CDropdownToggle } from '@coreui/react'
+import { useEffect } from 'react';
 
-function Etapa2() {
-
+function SetAdminUser() {
    const [admin, setAdmin] = useState(false);
-
 
    return (
       <>
          <CCard>
-            <h3><b>Status Usúario</b></h3>
+            <h5><b>Status Usúario</b></h5>
             <label for='admin'>
                <input id='admin' name='admin' type="checkbox"
                   onChange={e => setAdmin(e.target.checked)}
@@ -23,22 +22,76 @@ function Etapa2() {
                <p>O usuário atual é Colaborador</p>
             }
          </CCard>
+      </>
+   );
+}
 
+
+function CountrisList() {
+
+   const [countries, setCountries] = useState([]);
+   const [loading, setLoading] = useState(true);
+   const [error, setError] = useState(null);
+
+   useEffect(() => {
+      const fetchCountries = async () => {
+         try {
+            const response = await fetch(
+               'https://api.restcountries.com/countries/v5?limit=100&pretty=1',
+               { headers: { 'Authorization': 'Bearer rc_live_cb82df6b452d4519a4f23d3e6de9597e' } }
+            );
+            if (!response.ok) {
+               throw new Error('Falha no fetch');
+            }
+            const data = await response.json();
+            const countriesArray = responseJson.data.objects;
+            setCountries(countriesArray);
+            console.log('API Response:', data);  // Check the actual structure
+            console.log('Is array?', Array.isArray(data));
+         } catch (err) {
+            setError(err.message);
+         } finally {
+            setLoading(false);
+         }
+      };
+
+      fetchCountries();
+   }, []);
+
+   if (loading) return <p>Loading countries...</p>;
+   /*
+   if (error) return <p>Error: {error}</p>;
+   */
+
+
+   return (
+      <>
          <CCard>
-            <h3><b>100 Países do Mundo</b></h3>
+            <h5><b>100 Países do Mundo</b></h5>
 
-            <CDropdown>
-               <CDropdownToggle className='rounded-0' color="dark" variant='outline'>Dropdown button</CDropdownToggle>
-               <CDropdownMenu>
-                  <CDropdownItemPlain>Action</CDropdownItemPlain>
-                  <CDropdownItemPlain>Another action</CDropdownItemPlain>
-                  <CDropdownItemPlain>Something else here</CDropdownItemPlain>
-               </CDropdownMenu>
-            </CDropdown>
+            <div>
+               <ul>
+                  {countries.map((country) => (
+                     <li key={country.id}>
+                        <strong>{country.names.common}</strong> - {country.region}
+                     </li>
+                  ))}
+               </ul>
+            </div>
          </CCard>
+      </>
+   );
+}
 
+
+
+function Etapa2() {
+   return (
+      <>
+         <SetAdminUser />
+         <CountrisList />
          <CCard>
-            <h3><b>100 Produtos Faker</b></h3>
+            <h5><b>100 Produtos Faker</b></h5>
 
             <CDropdown>
                <CDropdownToggle className='rounded-0' color='dark' variant='outline'>Dropdown button</CDropdownToggle>
@@ -52,7 +105,7 @@ function Etapa2() {
 
 
          <CCard>
-            <h3><b>Pratos de Restaurante</b></h3>
+            <h5><b>Pratos de Restaurante</b></h5>
 
             <CDropdown>
                <CDropdownToggle className='rounded-0' color="dark" variant='outline'>Dropdown button</CDropdownToggle>
@@ -66,18 +119,5 @@ function Etapa2() {
       </>
    );
 }
-
-/*
-rc_live_f49e2fb8e5904925acdd4323005dc7eb
-
-const response = await fetch(
-  'https://api.restcountries.com/countries/v5?q=canada',
-  { headers: { 'Authorization': 'Bearer rc_live_f49e2fb8e5904925acdd4323005dc7eb' } }
-);
-const data = await response.json();
-
-*/
-
-// #f4f4f5
 
 export default Etapa2;

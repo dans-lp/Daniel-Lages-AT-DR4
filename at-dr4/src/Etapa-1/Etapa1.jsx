@@ -9,7 +9,7 @@ function ConteudoE1({ pergunta, resposta }) {
    return (
       <>
          <header>
-            <h3><b>{pergunta}</b></h3>
+            <h5><b>{pergunta}</b></h5>
          </header>
          <p>{resposta}</p>
       </>
