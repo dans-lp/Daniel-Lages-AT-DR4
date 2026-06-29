@@ -1,8 +1,9 @@
 //import styles from './Etapa2.module.css'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import '@coreui/coreui/dist/css/coreui.min.css'
-import { CCard, CDropdown, CDropdownItemPlain, CDropdownMenu, CDropdownToggle } from '@coreui/react'
-import { useEffect } from 'react';
+import { CCard, CDropdown, CDropdownItemPlain, CDropdownMenu, CDropdownToggle, CForm, CFormInput } from '@coreui/react'
+import { faker } from '@faker-js/faker';
+import { useMemo } from 'react';
 
 function SetAdminUser() {
    const [admin, setAdmin] = useState(false);
@@ -63,15 +64,20 @@ function CountrisList() {
                <CDropdownToggle className='rounded-0' color='dark' variant='outline'>Dropdown button</CDropdownToggle>
                <CDropdownMenu>
                   <CDropdownItemPlain>
-                     <div>
-                        <ul>
-                           {countries.map((country) => (
-                              <li key={country.uuid}>
-                                 <strong>{country.names.common}</strong>
-                              </li>
-                           ))}
-                        </ul>
-                     </div>
+
+                     {loading ? (
+                        <p>Carregando...</p>
+                     ) : (
+                        <div>
+                           <ul>
+                              {countries.map((country) => (
+                                 <li key={country.uuid}>
+                                    <strong>{country.names.common}</strong>
+                                 </li>
+                              ))}
+                           </ul>
+                        </div>
+                     )}
                   </CDropdownItemPlain>
                </CDropdownMenu>
             </CDropdown>
@@ -81,26 +87,62 @@ function CountrisList() {
 }
 
 
+function FilterFakerProducts() {
+
+   const [search, setSearch] = useState('');
+
+   const fakerProducts = useMemo(
+      () => faker.helpers.uniqueArray(faker.commerce.productName, 100)
+      , []
+   );
+
+
+   const filtragem = useMemo(() => {
+      if (!search) return fakerProducts;
+
+      return fakerProducts.filter((item) =>
+         item.toLowerCase().includes(search.toLowerCase())
+      );
+
+   }, [search]);
+
+
+   return (
+      <>
+         <CCard>
+            <h5><b>100 Produtos Faker</b></h5>
+            <CFormInput input
+               type="text"
+               placeholder='busca...'
+               value={search}
+               onChange={(e) => setSearch(e.target.value)}
+            />
+            <hr />
+            <div>
+               <ol style={{ marginInline: '80px' }} >
+                  {filtragem.length > 0 ? (
+                     filtragem.map((product, index) => (
+                        <li key={index}>
+                           <strong>{product}</strong>
+                        </li>
+                     ))
+                  ) : (
+                     <p>Produto não encontrado</p>
+                  )}
+               </ol>
+            </div>
+         </CCard>
+      </>
+   );
+}
+
 
 function Etapa2() {
    return (
       <>
          <SetAdminUser />
          <CountrisList />
-         <CCard>
-            <h5><b>100 Produtos Faker</b></h5>
-
-            <CDropdown>
-               <CDropdownToggle className='rounded-0' color='dark' variant='outline'>Dropdown button</CDropdownToggle>
-               <CDropdownMenu>
-                  <CDropdownItemPlain>Action</CDropdownItemPlain>
-                  <CDropdownItemPlain>Another action</CDropdownItemPlain>
-                  <CDropdownItemPlain>Something else here</CDropdownItemPlain>
-               </CDropdownMenu>
-            </CDropdown>
-         </CCard>
-
-
+         <FilterFakerProducts />
          <CCard>
             <h5><b>Pratos de Restaurante</b></h5>
 
