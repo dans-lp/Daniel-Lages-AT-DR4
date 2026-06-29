@@ -1,7 +1,19 @@
 //import styles from './Etapa2.module.css'
 import { useState, useEffect } from 'react';
 import '@coreui/coreui/dist/css/coreui.min.css'
-import { CCard, CDropdown, CDropdownItemPlain, CDropdownMenu, CDropdownToggle, CForm, CFormInput } from '@coreui/react'
+import {
+   CCard,
+   CDropdown,
+   CDropdownItem,
+   CDropdownItemPlain,
+   CDropdownMenu,
+   CDropdownToggle,
+   CFormInput,
+   CCardTitle,
+   CCardBody,
+   CCardText,
+   CCardImage
+} from '@coreui/react'
 import { faker } from '@faker-js/faker';
 import { useMemo } from 'react';
 
@@ -33,12 +45,16 @@ function CountrisList() {
    const [countries, setCountries] = useState([]);
    const [loading, setLoading] = useState(true);
 
+
+
    useEffect(() => {
       const fetchCountries = async () => {
          try {
             const response = await fetch(
-               'https://api.restcountries.com/countries/v5?limit=100&pretty=1',
-               { headers: { 'Authorization': 'Bearer rc_live_cb82df6b452d4519a4f23d3e6de9597e' } }
+               // Capaz que o link não funcione por ter ultrapassado o limite mensal de requests da minha conta
+               //Enquanto desenvolvia a parte 2, o limite já passou dos 50%.
+               //     'https://api.restcountries.com/countries/v5?limit=100&pretty=1',
+               //   { headers: { 'Authorization': 'Bearer rc_live_cb82df6b452d4519a4f23d3e6de9597e' } }
             );
             if (!response.ok) {
                console.error('Error fetching data:', error);
@@ -111,7 +127,7 @@ function FilterFakerProducts() {
       <>
          <CCard>
             <h5><b>100 Produtos Faker</b></h5>
-            <CFormInput input
+            <CFormInput
                type="text"
                placeholder='busca...'
                value={search}
@@ -137,24 +153,97 @@ function FilterFakerProducts() {
 }
 
 
+function MealsCategories() {
+   const [categories, setCategories] = useState([]);
+   const [loading, setLoading] = useState(true);
+   const [selectedCategory, setSelectedCategory] = useState(null);
+
+   useEffect(() => {
+      const fetchMeals = async () => {
+         try {
+            const response = await fetch('https://www.themealdb.com/api/json/v1/1/categories.php');
+            if (!response.ok) {
+               console.error('Error fetching data:', error);
+            }
+
+            const responseJson = await response.json();
+            const categoriesArray = responseJson.categories;
+            setCategories(categoriesArray);
+         } catch (err) {
+            console.error('Error fetching data:', err);
+         } finally {
+            setLoading(false);
+         }
+      }
+      fetchMeals();
+   }, [])
+
+   const MealCard = ({ meal }) => {
+
+      const title = meal.strCategory;
+      const img = meal.strCategoryThumb;
+      const description = meal.strCategoryDescription;
+
+
+
+
+      return (
+         <>
+            <div style={{ display: "flex", justifyContent: "center" }}>
+               <CCard className="mb-3 text-start border-dark" textBgColor={'light'} style={{ maxWidth: '540px' }}>
+                  <CCardImage orientation="top" src={img} /><hr />
+                  <CCardBody>
+                     <CCardTitle>{title}</CCardTitle>
+                     <CCardText>
+                        {description}
+                     </CCardText>
+                  </CCardBody>
+               </CCard>
+            </div>
+         </>
+      );
+   };
+
+   return (
+      <div>
+         <CCard>
+            <h5><b>Tipos de Pratos</b></h5>
+
+            <CDropdown>
+               <CDropdownToggle className='rounded-0' color='dark' variant='outline'>Dropdown button</CDropdownToggle>
+               <CDropdownMenu>
+                  {loading ? (
+                     <p>Carregando...</p>
+                  ) : (
+                     <div>
+                        <ul>
+                           {categories.map((item) => (
+                              <li key={item.idCategory}>
+                                 <CDropdownItem as={"button"} onClick={() => setSelectedCategory(item)}>
+                                    {item.strCategory}
+                                 </CDropdownItem>
+                              </li>
+                           ))}
+                        </ul>
+                     </div>
+                  )}
+               </CDropdownMenu>
+            </CDropdown>
+            <hr />
+            {selectedCategory ? (<MealCard meal={selectedCategory} />) : (" ")}
+         </CCard>
+      </div>
+   );
+}
+
+
 function Etapa2() {
    return (
       <>
          <SetAdminUser />
          <CountrisList />
          <FilterFakerProducts />
-         <CCard>
-            <h5><b>Pratos de Restaurante</b></h5>
-
-            <CDropdown>
-               <CDropdownToggle className='rounded-0' color="dark" variant='outline'>Dropdown button</CDropdownToggle>
-               <CDropdownMenu>
-                  <CDropdownItemPlain>Action</CDropdownItemPlain>
-                  <CDropdownItemPlain>Another action</CDropdownItemPlain>
-                  <CDropdownItemPlain>Something else here</CDropdownItemPlain>
-               </CDropdownMenu>
-            </CDropdown>
-         </CCard>
+         <MealsCategories />
       </>
    );
 }
