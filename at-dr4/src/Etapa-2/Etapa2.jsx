@@ -11,7 +11,7 @@ function SetAdminUser() {
       <>
          <CCard>
             <h5><b>Status Usúario</b></h5>
-            <label for='admin'>
+            <label htmlFor='admin'>
                <input id='admin' name='admin' type="checkbox"
                   onChange={e => setAdmin(e.target.checked)}
                /> Administrador
@@ -31,7 +31,6 @@ function CountrisList() {
 
    const [countries, setCountries] = useState([]);
    const [loading, setLoading] = useState(true);
-   const [error, setError] = useState(null);
 
    useEffect(() => {
       const fetchCountries = async () => {
@@ -41,15 +40,13 @@ function CountrisList() {
                { headers: { 'Authorization': 'Bearer rc_live_cb82df6b452d4519a4f23d3e6de9597e' } }
             );
             if (!response.ok) {
-               throw new Error('Falha no fetch');
+               console.error('Error fetching data:', error);
             }
-            const data = await response.json();
+            const responseJson = await response.json();
             const countriesArray = responseJson.data.objects;
             setCountries(countriesArray);
-            console.log('API Response:', data);  // Check the actual structure
-            console.log('Is array?', Array.isArray(data));
          } catch (err) {
-            setError(err.message);
+            console.error('Error fetching data:', err);
          } finally {
             setLoading(false);
          }
@@ -58,26 +55,26 @@ function CountrisList() {
       fetchCountries();
    }, []);
 
-   if (loading) return <p>Loading countries...</p>;
-   /*
-   if (error) return <p>Error: {error}</p>;
-   */
-
-
    return (
       <>
          <CCard>
             <h5><b>100 Países do Mundo</b></h5>
-
-            <div>
-               <ul>
-                  {countries.map((country) => (
-                     <li key={country.id}>
-                        <strong>{country.names.common}</strong> - {country.region}
-                     </li>
-                  ))}
-               </ul>
-            </div>
+            <CDropdown>
+               <CDropdownToggle className='rounded-0' color='dark' variant='outline'>Dropdown button</CDropdownToggle>
+               <CDropdownMenu>
+                  <CDropdownItemPlain>
+                     <div>
+                        <ul>
+                           {countries.map((country) => (
+                              <li key={country.uuid}>
+                                 <strong>{country.names.common}</strong>
+                              </li>
+                           ))}
+                        </ul>
+                     </div>
+                  </CDropdownItemPlain>
+               </CDropdownMenu>
+            </CDropdown>
          </CCard>
       </>
    );
