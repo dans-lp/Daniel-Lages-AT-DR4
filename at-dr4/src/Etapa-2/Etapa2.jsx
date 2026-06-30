@@ -1,5 +1,5 @@
 //import styles from './Etapa2.module.css'
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import '@coreui/coreui/dist/css/coreui.min.css'
 import {
    CCard,
@@ -44,20 +44,26 @@ function CountrisList() {
 
    const [countries, setCountries] = useState([]);
    const [loading, setLoading] = useState(true);
-
-
+   const cache = useRef(null);
 
    useEffect(() => {
+
+      if (cache.current) {
+         setCountries(cache.current);
+         setLoading(false);
+         return;
+      }
+
       const fetchCountries = async () => {
          try {
             const response = await fetch(
-               // Capaz que o link não funcione por ter ultrapassado o limite mensal de requests da minha conta
-               //Enquanto desenvolvia a parte 2, o limite já passou dos 50%.
-               //     'https://api.restcountries.com/countries/v5?limit=100&pretty=1',
-               //   { headers: { 'Authorization': 'Bearer rc_live_cb82df6b452d4519a4f23d3e6de9597e' } }
+               // Capaz que o link não funcione por ter ultrapassado o limite mensal de requests da minha conta.
+               //Enquanto desenvolvia a parte 2, o limite já havia passado dos 50%.
+               'https://api.restcountries.com/countries/v5?limit=100&pretty=1',
+               { headers: { 'Authorization': 'Bearer rc_live_cb82df6b452d4519a4f23d3e6de9597e' } }
             );
             if (!response.ok) {
-               console.error('Error fetching data:', error);
+               throw new Error(`HTTP error! Status: ${response.status}`);
             }
             const responseJson = await response.json();
             const countriesArray = responseJson.data.objects;
@@ -80,11 +86,10 @@ function CountrisList() {
                <CDropdownToggle className='rounded-0' color='dark' variant='outline'>Dropdown button</CDropdownToggle>
                <CDropdownMenu>
                   <CDropdownItemPlain>
-
                      {loading ? (
                         <p>Carregando...</p>
                      ) : (
-                        <div>
+                        <div style={{ maxHeight: '300px', overflowY: 'auto' }}>
                            <ul>
                               {countries.map((country) => (
                                  <li key={country.uuid}>
@@ -134,7 +139,7 @@ function FilterFakerProducts() {
                onChange={(e) => setSearch(e.target.value)}
             />
             <hr />
-            <div>
+            <div style={{ maxHeight: '500px', overflowY: 'auto' }}>
                <ol style={{ marginInline: '80px' }} >
                   {filtragem.length > 0 ? (
                      filtragem.map((product, index) => (
@@ -151,7 +156,6 @@ function FilterFakerProducts() {
       </>
    );
 }
-
 
 function MealsCategories() {
    const [categories, setCategories] = useState([]);
@@ -183,9 +187,6 @@ function MealsCategories() {
       const title = meal.strCategory;
       const img = meal.strCategoryThumb;
       const description = meal.strCategoryDescription;
-
-
-
 
       return (
          <>
