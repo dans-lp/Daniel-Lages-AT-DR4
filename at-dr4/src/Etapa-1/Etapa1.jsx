@@ -1,6 +1,4 @@
 import styles from './Etapa1.module.css'
-//import '@knadh/oat/oat.min.css';
-//import '@knadh/oat/oat.min.js';
 import { useState } from 'react';
 import { CButton, CCard } from '@coreui/react'
 

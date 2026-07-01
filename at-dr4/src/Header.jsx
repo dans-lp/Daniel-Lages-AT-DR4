@@ -15,7 +15,7 @@ function Header() {
                <CNavLink href="/etapa2" active={location.pathname === "/etapa2"}>Etapa 2</CNavLink>
             </CNavItem>
             <CNavItem>
-               <CNavLink href="/" active={location.pathname === "/etapa3"}>Etapa 3</CNavLink>
+               <CNavLink href="/etapa3" active={location.pathname === "/etapa3"}>Etapa 3</CNavLink>
             </CNavItem>
             <CNavItem>
                <CNavLink href="/" active={location.pathname === "/etapa4"}>Etapa 4</CNavLink>

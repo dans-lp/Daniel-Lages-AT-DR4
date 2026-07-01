@@ -1,4 +1,3 @@
-//import styles from './Etapa2.module.css'
 import { useState, useEffect, useRef } from 'react';
 import '@coreui/coreui/dist/css/coreui.min.css'
 import {
